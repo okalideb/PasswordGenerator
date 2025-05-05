@@ -1,7 +1,7 @@
 import string
 import secrets
 import random
-import time
+import time   
 
 def get_yes_no(prompt):
     """Prompt the user with a yes/no question and return True or False."""
@@ -57,10 +57,8 @@ def generate_password(length, use_lower, use_upper, use_digits, use_special):
 
     # Fill the remaining characters
     remaining = [secrets.choice(charset) for _ in range(length - len(required))]
-
     # Combine required chars with random picks
     password_chars = required + remaining
-
     # Securely shuffle to avoid predictable required-placement
     random.SystemRandom().shuffle(password_chars)
 
@@ -68,42 +66,43 @@ def generate_password(length, use_lower, use_upper, use_digits, use_special):
 
 def main():
     print("ヽ(=^･ω･^=)丿  Welcome to the Secure Password Generator!  乁(=^･ω･^=)ノ")
+    print("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――")
+    print("Developer note: A secure password must be as diverse and as long as possible. We recommend a password of length no less than 8 characters❗")
     print("―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――")
-    print("Developer note: A secure password must be as diverse and as long as possible we recommend a password of length no less than 8 characters❗")
-    print("―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――")
 
-    while True:
-        length = get_length("Enter desired password length")
-        use_lower = get_yes_no("Include lowercase letters?")
-        use_upper = get_yes_no("Include uppercase letters?")
-        use_digits = get_yes_no("Include digits?")
-        use_special = get_yes_no("Include special characters (e.g. !@#$)?")
+    while True:  # Outer loop for multiple password generations
+        # Inner loop to handle retries on invalid input
+        while True:
+            try:
+                length = get_length("Enter desired password length")
+                use_lower = get_yes_no("Include lowercase letters?")
+                use_upper = get_yes_no("Include uppercase letters?")
+                use_digits = get_yes_no("Include digits?")
+                use_special = get_yes_no("Include special characters (e.g. !@#$)?")
+                
+                pwd = generate_password(length, use_lower, use_upper, use_digits, use_special)
+                
+                # Password generation animation
+                print("\n⋘ please wait... ⋙\n")
+                print("Generating password ✍️")
+                time.sleep(0.3)
+                print("■□□□□20%")
+                time.sleep(0.3)
+                print("■■■□□60%")
+                time.sleep(0.3)
+                print("■■■■□80%")
+                time.sleep(0.3)
+                print("■■■■■100%\n")
+                print(f"Generated password (づ ᴗ _ᴗ)づ: {pwd}\n")
+                break  # Exit inner loop on successful generation
+            except ValueError as e:
+                print(f"Error: {e}")
+                print("Let's try again!\n")
 
-        try:
-            pwd = generate_password(
-                length, use_lower, use_upper, use_digits, use_special
-            )
-            print("")
-            print("⋘ please wait... ⋙")
-            print("")
-            print("Generating password ✍️")
-            time.sleep(0.3)
-            print("■□□□□20%")
-            time.sleep(0.3)
-            print("■■■□□60%")
-            time.sleep(0.3)
-            print("■■■■□80%")
-            time.sleep(0.3)
-            print("■■■■■100")
-           
-
-            print("")
-            print(f"Generated password (づ ᴗ _ᴗ)づ: {pwd}")
-            print("")
+        # Ask if user wants to generate another password
+        if not get_yes_no("Generate another password?"):
+            print("Goodbye! Have a secure day! (=^･ω･^=)")
             break
-        except ValueError as e:
-            print(f"Error: {e}")
-            print("Let's try again!\n")
 
 if __name__ == "__main__":
     main()
